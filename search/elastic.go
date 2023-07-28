@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"log"
 
 	elastic "github.com/elastic/go-elasticsearch/v7"
 	"github.com/lautistr/social-pet/enums"
@@ -98,4 +100,14 @@ func (r *ElasticSearchRepository) SearchPost(ctx context.Context, query string) 
 		posts = append(posts, post)
 	}
 	return posts, nil
+}
+
+func SetUpElasticSearchRepository(address string) {
+	es, err := NewElastic(fmt.Sprintf("http://%s", address))
+	if err != nil {
+		log.Fatal(err)
+	}
+	SetSearchRepository(es)
+
+	defer Close()
 }
