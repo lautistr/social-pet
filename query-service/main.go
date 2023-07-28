@@ -28,7 +28,7 @@ func main() {
 
 	database.SetupPostgresRepository(cfg)
 	search.SetUpElasticSearchRepository(cfg.ElasticsearchAddress)
-	events.SetupNatsMessageBroker(cfg.NatsAddress)
+	events.SetupNatsMessageBroker(cfg.NatsAddress, onCreatedPost)
 
 	router := setupRouter()
 	router.Run(enums.POSTS_PORT)

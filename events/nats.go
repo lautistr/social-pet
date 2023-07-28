@@ -94,10 +94,16 @@ func (n *NatsEventStore) SubscribeCreatedPost() (<-chan CreatedPostMessage, erro
 	return (<-chan CreatedPostMessage)(n.postCreatedChan), nil
 }
 
-func SetupNatsMessageBroker(address string) {
+func SetupNatsMessageBroker(address string, f ...func(m CreatedPostMessage)) {
 	n, err := NewNats(fmt.Sprintf("nats://%s", address))
 	if err != nil {
 		log.Fatal(err)
+	}
+	if len(f) == 1 {
+		err = n.OnCreatedPost(f[0])
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	SetEventStore(n)
 
