@@ -3,10 +3,13 @@ package database
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 
 	"github.com/lautistr/social-pet/models"
+	"github.com/lautistr/social-pet/repository"
 )
 
 type PostgresRepository struct {
@@ -46,4 +49,13 @@ func (repo *PostgresRepository) ListPosts(ctx context.Context) ([]*models.Post, 
 		posts = append(posts, post)
 	}
 	return posts, nil
+}
+
+func SetupPostgresRepository(config models.Config) {
+	addr := fmt.Sprintf("postgres://%s:%s@postgres/%s?sslmode=disable", config.PostgresUser, config.PostgresPassword, config.PostgresDB)
+	repo, err := NewPostgresRepository(addr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	repository.SetRepository(repo)
 }

@@ -3,6 +3,8 @@ package events
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
+	"log"
 
 	"github.com/lautistr/social-pet/models"
 	"github.com/nats-io/nats.go"
@@ -90,4 +92,14 @@ func (n *NatsEventStore) SubscribeCreatedPost() (<-chan CreatedPostMessage, erro
 		}
 	}()
 	return (<-chan CreatedPostMessage)(n.postCreatedChan), nil
+}
+
+func SetupNatsMessageBroker(address string) {
+	n, err := NewNats(fmt.Sprintf("nats://%s", address))
+	if err != nil {
+		log.Fatal(err)
+	}
+	SetEventStore(n)
+
+	defer Close()
 }
