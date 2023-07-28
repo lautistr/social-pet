@@ -1,16 +1,14 @@
 package events
 
 import (
-	"context"
-
 	"github.com/lautistr/social-pet/models"
 )
 
 type EventStore interface {
 	Close()
-	PublishCreatedPost(ctx context.Context, post *models.Post) error
-	SubscribeCreatedPost(ctx context.Context) (<-chan CreatedPostMessage, error)
-	OnCreatedPost(ctx context.Context, f func(CreatedPostMessage)) error
+	PublishCreatedPost(post *models.Post) error
+	SubscribeCreatedPost() (<-chan CreatedPostMessage, error)
+	OnCreatedPost(f func(CreatedPostMessage)) error
 }
 
 var eventStore EventStore
@@ -23,14 +21,14 @@ func Close() {
 	eventStore.Close()
 }
 
-func PublishCreatedPost(ctx context.Context, post *models.Post) error {
-	return eventStore.PublishCreatedPost(ctx, post)
+func PublishCreatedPost(post *models.Post) error {
+	return eventStore.PublishCreatedPost(post)
 }
 
-func SubscribeCreatedPost(ctx context.Context) (<-chan CreatedPostMessage, error) {
-	return eventStore.SubscribeCreatedPost(ctx)
+func SubscribeCreatedPost() (<-chan CreatedPostMessage, error) {
+	return eventStore.SubscribeCreatedPost()
 }
 
-func OnCreatedPost(ctx context.Context, f func(CreatedPostMessage)) error {
-	return eventStore.OnCreatedPost(ctx, f)
+func OnCreatedPost(f func(CreatedPostMessage)) error {
+	return eventStore.OnCreatedPost(f)
 }

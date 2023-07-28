@@ -41,7 +41,7 @@ func createPostHandler(c *gin.Context) {
 		return
 	}
 
-	if err := events.PublishCreatedPost(c.Request.Context(), &Post); err != nil {
+	if err := events.PublishCreatedPost(&Post); err != nil {
 		log.Printf("%s: %v", enums.ERROR_PUBLISH_POST_EVENT, err)
 	}
 

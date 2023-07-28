@@ -2,7 +2,6 @@ package events
 
 import (
 	"bytes"
-	"context"
 	"encoding/gob"
 
 	"github.com/lautistr/social-pet/models"
@@ -45,7 +44,7 @@ func (n *NatsEventStore) encodeMessage(m Message) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func (n *NatsEventStore) PublishCreatedPost(ctx context.Context, post *models.Post) error {
+func (n *NatsEventStore) PublishCreatedPost(post *models.Post) error {
 	msg := CreatedPostMessage{
 		Post: post,
 	}
@@ -63,7 +62,7 @@ func (n *NatsEventStore) decodeMessage(data []byte, m interface{}) error {
 	return gob.NewDecoder(&b).Decode(m)
 }
 
-func (n *NatsEventStore) OnCreatedPost(ctx context.Context, f func(CreatedPostMessage)) (err error) {
+func (n *NatsEventStore) OnCreatedPost(f func(CreatedPostMessage)) (err error) {
 	msg := CreatedPostMessage{}
 	n.postCreatedSub, err = n.conn.Subscribe(msg.Type(), func(m *nats.Msg) {
 		n.decodeMessage(m.Data, &msg)
@@ -72,7 +71,7 @@ func (n *NatsEventStore) OnCreatedPost(ctx context.Context, f func(CreatedPostMe
 	return
 }
 
-func (n *NatsEventStore) SubscribeCreatedPost(ctx context.Context) (<-chan CreatedPostMessage, error) {
+func (n *NatsEventStore) SubscribeCreatedPost() (<-chan CreatedPostMessage, error) {
 	m := CreatedPostMessage{}
 	n.postCreatedChan = make(chan CreatedPostMessage, 64)
 	ch := make(chan *nats.Msg, 64)
