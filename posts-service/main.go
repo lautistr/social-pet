@@ -24,8 +24,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	events.SetupNatsMessageBroker(cfg.NatsAddress)
 	database.SetupPostgresRepository(cfg)
+	events.SetupNatsMessageBroker(cfg.NatsAddress)
 
 	router := setupRouter()
 	router.Run(enums.POSTS_PORT)
