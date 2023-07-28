@@ -17,6 +17,7 @@ COPY database database
 COPY search search
 COPY models models
 COPY posts-service posts-service
+COPY query-service query-service
 
 RUN go install ./...
 
