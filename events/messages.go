@@ -1,6 +1,9 @@
 package events
 
-import "github.com/lautistr/social-pet/models"
+import (
+	"github.com/lautistr/social-pet/enums"
+	"github.com/lautistr/social-pet/models"
+)
 
 type Message interface {
 	Type() string
@@ -11,5 +14,5 @@ type CreatedPostMessage struct {
 }
 
 func (m CreatedPostMessage) Type() string {
-	return "created_post"
+	return enums.EventMessageType_Post
 }
