@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.16.6
+ARG GO_VERSION=1.20.3
 
 FROM golang:${GO_VERSION}-alpine AS builder
 
@@ -11,7 +11,8 @@ WORKDIR /src
 COPY ./go.mod ./go.sum ./
 RUN go mod download
 
-COPY utils utils
+COPY enums enums
+COPY repository repository
 COPY events events
 COPY database database
 COPY search search
